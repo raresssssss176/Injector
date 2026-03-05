@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Car Hunter | Precision Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen font-sans">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-full max-w-md animate-bounce">
+            <div class="bg-green-600 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center justify-between border border-green-400">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">📧</span>
+                    <p class="font-bold text-sm">{{ message }}</p>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" class="text-white/50 hover:text-white">✕</button>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="flex flex-col items-center justify-center p-6 mt-10">
+        <div class="w-full max-w-2xl bg-gray-800 border border-blue-500/30 rounded-3xl shadow-2xl overflow-hidden">
+            <div class="bg-blue-600 p-4 text-center">
+                <h1 class="text-xl font-bold tracking-widest uppercase">AI Car Hunter Engine</h1>
+            </div>
+
+            <form action="/search" method="POST" class="p-8 space-y-4">
+                <div>
+                    <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Car Brand or Model</label>
+                    <input type="text" name="query" placeholder="e.g. Volkswagen Tuareg, BMW M3" required
+                        class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white placeholder-gray-600">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Max Price (€)</label>
+                        <input type="number" name="max_price" placeholder="15000" required
+                            class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Max Distance (km)</label>
+                        <input type="number" name="distance" placeholder="100" required
+                            class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Your City</label>
+                        <input type="text" name="user_city" placeholder="e.g. Bucuresti" required
+                            class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Keywords to Avoid</label>
+                        <input type="text" name="avoid" placeholder="accident, taxi..."
+                            class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full mt-2 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-lg transition-all active:scale-95 shadow-lg shadow-blue-500/20">
+                    SEARCH & PAY TO UNLOCK
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto w-full p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% if ads %}
+            {% for ad in ads %}
+            <div class="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden flex flex-col shadow-lg transition-transform hover:scale-[1.02]">
+                <div class="p-5 flex-grow">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-bold truncate pr-2">{{ ad.name }}</h3>
+                        <span class="text-blue-400 font-black text-lg">{{ ad.price }}€</span>
+                    </div>
+                    
+                    <div class="flex justify-between text-[11px] text-gray-400 mb-4">
+                        <span>📍 {{ ad.location }}</span>
+                        <span class="text-blue-300 font-bold uppercase">{{ ad.km_away }} KM AWAY</span>
+                    </div>
+
+                    <div class="bg-gray-900 p-3 rounded-xl border border-gray-700 mb-4">
+                        <p class="text-xs text-gray-300 italic leading-relaxed">
+                            <span class="text-blue-500 font-bold">AI Analysis:</span> {{ ad.ai_summary }}
+                        </p>
+                    </div>
+
+                    <a href="{{ ad.link }}" target="_blank" 
+                       class="block w-full text-center bg-gray-700 hover:bg-blue-600 text-white text-sm font-bold py-3 rounded-xl transition-colors">
+                        VIEW ORIGINAL AD
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-span-full text-center py-20 opacity-30">
+                <div class="text-6xl mb-4">🔍</div>
+                <p class="text-xl font-medium">Use the engine above to find your car.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="p-6 bg-gray-800/20 border-t border-gray-800 mt-auto">
+        <div class="max-w-4xl mx-auto h-24 border-2 border-dashed border-gray-700 rounded-xl flex items-center justify-center text-gray-600 font-mono text-sm">
+            [SPONSORED AD SLOT]
+        </div>
+    </div>
+
+</body>
+</html>
