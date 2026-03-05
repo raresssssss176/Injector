@@ -15,8 +15,9 @@ stripe.api_key = os.getenv("STRIPE_API_KEY")
 
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
-    MAIL_PORT=587,
-    MAIL_USE_TLS=True,
+    MAIL_PORT=465,
+    MAIL_USE_SSL=True,  
+    MAIL_USE_TLS=False, 
     MAIL_USERNAME='greengrizzly52@gmail.com',
     MAIL_PASSWORD=os.getenv("MAIL_PASSWORD") 
 )
