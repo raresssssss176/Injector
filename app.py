@@ -22,7 +22,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'greengrizzly52@gmail.com'
-app.config['MAIL_PASSWORD'] = 'qhel rpwh uopn udjv'
+app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
 mail = Mail(app)
 
 geolocator = Nominatim(user_agent="car_hunter_web_v1")

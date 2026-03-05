@@ -6,9 +6,13 @@ from datetime import datetime
 from aihelper import summarize_car
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # CONFIGURATION
-DATADOME_COOKIE = "qjBwY28eJkMNwmBh2QLKETGsSHWSuGCMUBavrbTfMMfSoaeGp1wkiV0tsbzC_Ici7~frX8EuoPytYO7cN0bFDYTWG~m0MEZlBTqiWQb~jDAaoGmo28P0L3K8W2Ap8vx6here"
+DATADOME_COOKIE = os.environ.get("DATADOME_COOKIE")
 
 # Initialize Geocoder
 geolocator = Nominatim(user_agent="car_hunter_romania_v1")
