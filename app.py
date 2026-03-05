@@ -1,39 +1,41 @@
 import stripe
 import sqlite3
-from flask import Flask, render_template, request, redirect
-from flask_mail import Mail, Message  # New Import
+import os
+from flask import Flask, render_template, request, redirect, url_for
+from flask_mail import Mail, Message
 from geopy.geocoders import Nominatim
 from math import radians, cos, sin, asin, sqrt
-import os
 from dotenv import load_dotenv
 
+# 1. Initialize App and Load Environment
 load_dotenv()
-
 app = Flask(__name__)
 
-# --- SECURE CONFIGURATION ---
-stripe.api_key = os.environ.get("STRIPE_API_KEY")
+# 2. Secure Configuration
+# Make sure STRIPE_API_KEY and MAIL_PASSWORD are added in your Render "Environment" tab!
+stripe.api_key = os.getenv("STRIPE_API_KEY")
 
-app.config['MAIL_USERNAME'] = 'greengrizzly52@gmail.com'
-app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
-# ... rest of mail config
-# --- MAIL SETTINGS (Using Gmail as an example) ---
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'greengrizzly52@gmail.com'
-app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USERNAME='greengrizzly52@gmail.com',
+    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD") # Use the 16-character App Password here
+)
 mail = Mail(app)
 
 geolocator = Nominatim(user_agent="car_hunter_web_v1")
 
+# --- Helper Function ---
 def haversine(lat1, lon1, lat2, lon2):
-    if lat1 is None or lon1 is None or lat2 is None or lon2 is None:
+    if None in (lat1, lon1, lat2, lon2):
         return 9999
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
     dlon, dlat = lon2 - lon1, lat2 - lat1 
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
     return 2 * asin(sqrt(a)) * 6371
+
+# --- Routes ---
 
 @app.route('/')
 def home():
@@ -48,9 +50,21 @@ def search_and_pay():
     avoid = request.form.get('avoid', '')
 
     try:
+        # url_for handles slashes and domain names automatically for Render
+        success_url = url_for('success', 
+                             _external=True, 
+                             session_id='{CHECKOUT_SESSION_ID}',
+                             q=query, 
+                             p=max_price, 
+                             c=user_city, 
+                             d=distance, 
+                             a=avoid)
+        
+        cancel_url = url_for('home', _external=True)
+
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
-            customer_creation='always', # Ensures we capture the email
+            customer_creation='always',
             line_items=[{
                 'price_data': {
                     'currency': 'ron',
@@ -60,25 +74,27 @@ def search_and_pay():
                 'quantity': 1,
             }],
             mode='payment',
-            success_url=request.host_url + 'success?session_id={CHECKOUT_SESSION_ID}' + \
-                        f'&q={query}&p={max_price}&c={user_city}&d={distance}&a={avoid}',
-            cancel_url=request.host_url,
+            success_url=success_url,
+            cancel_url=cancel_url,
         )
         return redirect(checkout_session.url, code=303)
     except Exception as e:
+        print(f"STRIPE ERROR: {e}")
         return f"Stripe Error: {e}", 500
 
 @app.route('/success')
 def success():
     session_id = request.args.get('session_id')
+    if not session_id:
+        return "Missing session ID", 400
+        
     session = stripe.checkout.Session.retrieve(session_id)
     
     if session.payment_status != 'paid':
         return "Payment not verified.", 403
 
-    # --- PULL EMAIL FROM STRIPE ---
+    # --- PULL DATA ---
     user_email = session.customer_details.email 
-
     query = request.args.get('q', '')
     max_price = int(request.args.get('p') or 999999)
     user_city = request.args.get('c', 'Bucuresti')
@@ -109,21 +125,21 @@ def success():
     filtered_ads.sort(key=lambda x: x['km_away'])
 
     # --- SEND THE EMAIL ---
-    try:
-        msg = Message(f"Your Car Hunt Results for {query}",
-                      sender=app.config['MAIL_USERNAME'],
-                      recipients=[user_email])
-        
-        # Simple text body with the top 3 results
-        body = f"Hello! Here are your top matches for {query} near {user_city}:\n\n"
-        for ad in filtered_ads[:5]: # Send top 5
-            body += f"- {ad['name']}: {ad['price']}€ ({ad['km_away']} km away)\n  Link: {ad['link']}\n\n"
-        
-        msg.body = body
-        mail.send(msg)
-        print(f"DEBUG: Email sent to {user_email}")
-    except Exception as e:
-        print(f"MAIL ERROR: {e}")
+    if filtered_ads:
+        try:
+            msg = Message(f"Your Car Hunt Results for {query}",
+                          sender=app.config['MAIL_USERNAME'],
+                          recipients=[user_email])
+            
+            body = f"Hello! Here are your top matches for {query} near {user_city}:\n\n"
+            for ad in filtered_ads[:5]:
+                body += f"- {ad['name']}: {ad['price']}€ ({ad['km_away']} km away)\n  Link: {ad['link']}\n\n"
+            
+            msg.body = body
+            mail.send(msg)
+            print(f"DEBUG: Email sent to {user_email}")
+        except Exception as e:
+            print(f"MAIL ERROR: {e}")
 
     return render_template('index.html', ads=filtered_ads)
 
