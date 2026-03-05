@@ -4,12 +4,19 @@ from flask import Flask, render_template, request, redirect
 from flask_mail import Mail, Message  # New Import
 from geopy.geocoders import Nominatim
 from math import radians, cos, sin, asin, sqrt
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# --- STRIPE & MAIL CONFIGURATION ---
-stripe.api_key = "sk_test_51T2ZHvJO1sgoIfZnpWBZMCPw2zZRBVQMW6cKc5Jy4nLknJc3DPdpHL1KoFuXSez3jZ0OPUhEMVnWeqhnri5sjqoO00vHJTtrmD" # Your Key
+# --- SECURE CONFIGURATION ---
+stripe.api_key = os.environ.get("STRIPE_API_KEY")
 
+app.config['MAIL_USERNAME'] = 'greengrizzly52@gmail.com'
+app.config['MAIL_PASSWORD'] = os.environ.get("MAIL_PASSWORD")
+# ... rest of mail config
 # --- MAIL SETTINGS (Using Gmail as an example) ---
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587

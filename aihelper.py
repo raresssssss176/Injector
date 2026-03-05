@@ -1,6 +1,11 @@
+import os
 import openai
+from dotenv import load_dotenv
 
-client = openai.OpenAI(api_key="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")
+load_dotenv()
+
+
+client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 def summarize_car(title, description):
     """Uses OpenAI to create a high-speed technical summary of the car."""
