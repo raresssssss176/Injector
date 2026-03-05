@@ -20,7 +20,7 @@ app.config.update(
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
     MAIL_USERNAME='greengrizzly52@gmail.com',
-    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD") # Use the 16-character App Password here
+    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD") # Must be a 16-character App Password
 )
 mail = Mail(app)
 
@@ -50,15 +50,16 @@ def search_and_pay():
     avoid = request.form.get('avoid', '')
 
     try:
-        # url_for handles slashes and domain names automatically for Render
-        success_url = url_for('success', 
-                             _external=True, 
-                             session_id='{CHECKOUT_SESSION_ID}',
-                             q=query, 
-                             p=max_price, 
-                             c=user_city, 
-                             d=distance, 
-                             a=avoid)
+        # We get the base URL from Flask
+        base_success_url = url_for('success', _external=True)
+        
+        # We MANUALLY append the parameters. 
+        # Using {{CHECKOUT_SESSION_ID}} ensures Python puts literal brackets in the string
+        # so Stripe can find it and replace it with the real ID.
+        success_url = (
+            f"{base_success_url}?session_id={{CHECKOUT_SESSION_ID}}"
+            f"&q={query}&p={max_price}&c={user_city}&d={distance}&a={avoid}"
+        )
         
         cancel_url = url_for('home', _external=True)
 
@@ -85,10 +86,13 @@ def search_and_pay():
 @app.route('/success')
 def success():
     session_id = request.args.get('session_id')
-    if not session_id:
-        return "Missing session ID", 400
+    if not session_id or session_id == "{CHECKOUT_SESSION_ID}":
+        return "Invalid Session ID. Stripe did not replace the placeholder.", 400
         
-    session = stripe.checkout.Session.retrieve(session_id)
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+    except Exception as e:
+        return f"Stripe Retrieval Error: {e}", 500
     
     if session.payment_status != 'paid':
         return "Payment not verified.", 403
@@ -105,12 +109,18 @@ def success():
     user_loc = geolocator.geocode(f"{user_city}, Romania")
     u_lat, u_lon = (user_loc.latitude, user_loc.longitude) if user_loc else (44.4268, 26.1025)
 
-    conn = sqlite3.connect('market.db')
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM ads WHERE name LIKE ? AND price <= ?", (f'%{query}%', max_price))
-    rows = cursor.fetchall()
-    conn.close()
+    # Use an absolute path for the DB to avoid Render pathing issues
+    db_path = os.path.join(os.getcwd(), 'market.db')
+    
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM ads WHERE name LIKE ? AND price <= ?", (f'%{query}%', max_price))
+        rows = cursor.fetchall()
+        conn.close()
+    except sqlite3.OperationalError as e:
+        return f"Database Error: {e}. Make sure market.db is uploaded to GitHub.", 500
 
     filtered_ads = []
     for row in rows:
