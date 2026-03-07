@@ -49,7 +49,7 @@ def search_and_pay():
                 'price_data': {
                     'currency': 'ron', 
                     'product_data': {'name': f'Car Search: {query}'}, 
-                    'unit_amount': 500
+                    'unit_amount': 1200
                 }, 
                 'quantity': 1
             }],
