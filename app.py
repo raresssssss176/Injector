@@ -120,7 +120,7 @@ def success():
             ad_text = "\n".join([f"- {a['name']}: {a['price']}€ ({a['km_away']}km) {a['link']}" for a in filtered_ads[:5]])
             
             resend.Emails.send({
-                "from": "CarHunter <onboarding@resend.dev>",
+                "from": "CarHunter <alerts@carhunterengine.com>",
                 "to": [user_email],
                 "subject": f"Your Matches for {query}",
                 "text": f"Found {len(filtered_ads)} cars near {user_city}!\n\nTop Matches:\n{ad_text}"
