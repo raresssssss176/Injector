@@ -105,7 +105,7 @@ def run():
     headers = {
         'content-type': 'application/json',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36',
-        'referer': 'https://www.olx.ro/auto-masini-moto-ambarcatiuni/autoturisme/',
+        'referer': 'https://www.olx.ro/auto-masini-moto-ambarcatiuni/autoturisme/?currency=EUR',
         'x-client': 'DESKTOP',
     }
     
@@ -114,7 +114,7 @@ def run():
         'variables': {
             'searchParameters': [
                 {'key': 'offset', 'value': '0'},
-                {'key': 'limit', 'value': '10'}, 
+                {'key': 'limit', 'value': '39'}, 
                 {'key': 'category_id', 'value': '84'},
             ]
         }
