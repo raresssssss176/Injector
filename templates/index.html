@@ -108,7 +108,33 @@
         <div class="max-w-4xl mx-auto h-24 border-2 border-dashed border-gray-700 rounded-xl flex items-center justify-center text-gray-600 font-mono text-sm">
             [SPONSORED AD SLOT]
         </div>
+
+        <div class="mt-8 text-center">
+            <button onclick="enterSecretShop()" class="text-[10px] text-gray-700 hover:text-gray-500 uppercase tracking-widest font-bold transition-colors">
+                Admin Access
+            </button>
+        </div>
     </div>
+
+    <script>
+    function enterSecretShop() {
+        let pw = prompt("Enter Secret Admin Password:");
+        if (pw) {
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/login';
+            
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'password';
+            input.value = pw;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    </script>
 
 </body>
 </html>

@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from geopy.geocoders import Nominatim
 from math import radians, cos, sin, asin, sqrt
 from dotenv import load_dotenv
+from flask import session
 
 load_dotenv()
 app = Flask(__name__)
@@ -13,6 +14,52 @@ app = Flask(__name__)
 # --- CONFIG ---
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 resend.api_key = os.getenv("RESEND_API_KEY")
+app.secret_key = os.getenv("SESSION_KEY")
+SANDWICHES = [
+    {"id": "1", "name": "Pesto", "price": 4, "img": "20260319_173017.jpg"},
+    {"id": "2", "name": "Simplu", "price": 3, "img": "20260319_173139.jpg"},
+    {"id": "3", "name": "Dulce", "price": 4, "img": "20260319_173448.jpg"},
+    {"id": "4", "name": "Cu paine de casa", "price": 4, "img": "20260319_173929.jpg"},
+    {"id": "5", "name": "Cu paine prajita si bacon", "price": 5, "img": "20260319_174626.jpg"}
+]
+
+@app.route('/login', methods=['POST'])
+def login():
+    password = request.form.get('password')
+    # Compare against an Env Var for security
+    if password == os.getenv("ADMIN_PASSWORD"):
+        session['is_sandwich_pro'] = True  
+        return redirect(url_for('sandwich_shop'))
+    return "Wrong password!", 401
+@app.route('/sandwiches')
+def sandwich_shop():
+    if not session.get('is_sandwich_pro'):
+        return redirect(url_for('home'))
+    
+    return render_template('sandwiches.html', menu=SANDWICHES)
+@app.route('/order-sandwich/<item_id>', methods=['POST'])
+def order_sandwich(item_id):
+    # Find the sandwich the user clicked on
+    sandwich = next((s for s in SANDWICHES if s['id'] == item_id), None)
+    
+    if not sandwich:
+        return "Sandwich not found", 404
+
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price_data': {
+                'currency': 'ron', 
+                'product_data': {'name': sandwich['name']},
+                'unit_amount': int(sandwich['price'] * 100), 
+            },
+            'quantity': 1,
+        }],
+        mode='payment',
+        success_url=url_for('home', _external=True),
+        cancel_url=url_for('sandwich_shop', _external=True),
+    )
+    return redirect(checkout_session.url, code=303)
 
 # Geopy with high timeout to avoid hanging the worker
 geolocator = Nominatim(user_agent="car_hunter_romania_v2", timeout=10)

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sandwich uri cu cardu'</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; text-align: center; padding: 50px; }
+        .grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 250px; }
+        .card img { width: 100%; border-radius: 10px; height: 150px; object-fit: cover; }
+        button { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>Meniu</h1>
+    <p>Pentru domnisorii cu parola</p>
+
+    <div class="grid">
+        {% for item in menu %}
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/' + item.img) }}" alt="{{ item.name }}">
+            
+            <h3>{{ item.name }}</h3>
+            <p>Price: {{ item.price }}RON</p>
+
+            <form action="{{ url_for('order_sandwich', item_id=item.id) }}" method="POST">
+                <button type="submit">Buy Now</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <br>
+    <a href="/">Back to Cars</a>
+
+</body>
+</html>
