@@ -38,6 +38,21 @@ def haversine(lat1, lon1, lat2, lon2):
 def home():
     return render_template('index.html', ads=[], is_teaser=False)
 
+@app.route('/privacy')
+def privacy():
+    return """
+    <html>
+    <body style="background:#111; color:#ccc; font-family:sans-serif; padding:50px; line-height:1.6;">
+        <h1>Privacy Policy for AI Car Hunter</h1>
+        <p>This website uses Google AdSense to serve ads. Google uses cookies to serve ads based on your prior visits to this or other websites.</p>
+        <p>Google's use of advertising cookies enables it and its partners to serve ads based on your visit to our site.</p>
+        <p>You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" style="color:#3b82f6">Ads Settings</a>.</p>
+        <br>
+        <a href="/" style="color:#3b82f6">← Back to Search</a>
+    </body>
+    </html>
+    """
+
 @app.route('/search', methods=['POST'])
 def search_teaser():
     """Performs a free search but only returns 3 'locked' results."""
