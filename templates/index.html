@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Car Hunter | Precision Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Premium Blur Effect */
+        .locked-blur {
+            filter: blur(8px);
+            user-select: none;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .lock-overlay {
+            position: relative;
+        }
+        /* Subtle animation for the Pay button */
+        .glow-button {
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen font-sans">
 
@@ -33,75 +55,104 @@
             <form action="/search" method="POST" class="p-8 space-y-4">
                 <div>
                     <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Modelul masini</label>
-                    <input type="text" name="query" placeholder="e.g. Volkswagen Tuareg, BMW M3" required
+                    <input type="text" name="query" value="{{ params.query if params else '' }}" placeholder="e.g. Volkswagen Touareg" required
                         class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white placeholder-gray-600">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Pretul Maxim (€)</label>
-                        <input type="number" name="max_price" placeholder="15000" required
+                        <input type="number" name="max_price" value="{{ params.max_price if params else '' }}" placeholder="15000" required
                             class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white">
                     </div>
                     <div>
-                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Distanta fata de dvs (km)</label>
-                        <input type="number" name="distance" placeholder="100" required
+                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Distanta (km)</label>
+                        <input type="number" name="distance" value="{{ params.distance if params else '100' }}" placeholder="100" required
                             class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Orasul dvs</label>
-                        <input type="text" name="user_city" placeholder="e.g. Bucuresti" required
+                        <input type="text" name="user_city" value="{{ params.user_city if params else '' }}" placeholder="e.g. Bucuresti" required
                             class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white">
                     </div>
                     <div>
-                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Cuvinte ce ar trebui sa lipseasca din descriere</label>
-                        <input type="text" name="avoid" placeholder="accident, taxi..."
+                        <label class="block text-[10px] text-gray-400 uppercase font-bold mb-1">Evita cuvinte</label>
+                        <input type="text" name="avoid" value="{{ params.avoid if params else '' }}" placeholder="accident, taxi..."
                             class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 outline-none focus:border-blue-500 text-white">
                     </div>
                 </div>
 
                 <button type="submit" class="w-full mt-2 bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-lg transition-all active:scale-95 shadow-lg shadow-blue-500/20">
-                    Plateste si cauta
+                    🔍 Cauta Masini
                 </button>
             </form>
         </div>
     </div>
 
-    <div class="max-w-6xl mx-auto w-full p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% if ads %}
-            {% for ad in ads %}
-            <div class="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden flex flex-col shadow-lg transition-transform hover:scale-[1.02]">
-                <div class="p-5 flex-grow">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-lg font-bold truncate pr-2">{{ ad.name }}</h3>
-                        <span class="text-blue-400 font-black text-lg">{{ ad.price }}€</span>
-                    </div>
-                    
-                    <div class="flex justify-between text-[11px] text-gray-400 mb-4">
-                        <span>📍 {{ ad.location }}</span>
-                        <span class="text-blue-300 font-bold uppercase">{{ ad.km_away }} KM</span>
-                    </div>
-
-                    <div class="bg-gray-900 p-3 rounded-xl border border-gray-700 mb-4">
-                        <p class="text-xs text-gray-300 italic leading-relaxed">
-                            <span class="text-blue-500 font-bold">Analiza AI:</span> {{ ad.ai_summary }}
-                        </p>
-                    </div>
-
-                    <a href="{{ ad.link }}" target="_blank" 
-                       class="block w-full text-center bg-gray-700 hover:bg-blue-600 text-white text-sm font-bold py-3 rounded-xl transition-colors">
-                        Vezi anuntul original
-                    </a>
-                </div>
-            </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-span-full text-center py-20 opacity-30">
-                <div class="text-6xl mb-4">🔍</div>
-                <p class="text-xl font-medium">Folosteste casutele pentru ati gasi masina visurilor.</p>
-            </div>
+    <div class="max-w-6xl mx-auto w-full p-6">
+        
+        {% if is_teaser and ads %}
+        <div class="mb-10 bg-gradient-to-r from-green-900/40 to-blue-900/40 border-2 border-green-500/50 rounded-3xl p-8 text-center shadow-2xl">
+            <h2 class="text-2xl font-black mb-2 text-green-400">Am gasit {{ total_found }} rezultate!</h2>
+            <p class="text-gray-300 mb-6 text-sm">Afisam cele mai apropiate 3 masini. Deblocheaza toate cele {{ total_found }} rezultate si primeste-le pe email.</p>
+            
+            <form action="/buy-results" method="POST">
+                <input type="hidden" name="q" value="{{ params.query }}">
+                <input type="hidden" name="p" value="{{ params.max_price }}">
+                <input type="hidden" name="c" value="{{ params.user_city }}">
+                <input type="hidden" name="d" value="{{ params.distance }}">
+                <input type="hidden" name="a" value="{{ params.avoid }}">
+                
+                <button type="submit" class="glow-button bg-green-600 hover:bg-green-500 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest transition-transform active:scale-95">
+                    Deblocheaza Tot (12 RON)
+                </button>
+            </form>
+        </div>
         {% endif %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% if ads %}
+                {% for ad in ads %}
+                <div class="bg-gray-800 border border-gray-700 rounded-2xl overflow-hidden flex flex-col shadow-lg transition-transform hover:scale-[1.02]">
+                    <div class="p-5 flex-grow">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold truncate pr-2">{{ ad.name }}</h3>
+                            <span class="text-blue-400 font-black text-lg {% if is_teaser %}locked-blur{% endif %}">{{ ad.price }}€</span>
+                        </div>
+                        
+                        <div class="flex justify-between text-[11px] text-gray-400 mb-4">
+                            <span>📍 {{ ad.location if ad.location else 'Locatie' }}</span>
+                            <span class="text-blue-300 font-bold uppercase">{{ ad.km_away }} KM</span>
+                        </div>
+
+                        <div class="bg-gray-900 p-3 rounded-xl border border-gray-700 mb-4">
+                            <p class="text-xs text-gray-300 italic leading-relaxed">
+                                <span class="text-blue-500 font-bold">Analiza AI:</span> 
+                                <span class="{% if is_teaser %}locked-blur{% endif %}">{{ ad.ai_summary if ad.ai_summary else 'Analiza disponibila dupa deblocare.' }}</span>
+                            </p>
+                        </div>
+
+                        {% if is_teaser %}
+                        <div class="w-full text-center bg-gray-700/50 text-gray-500 text-xs font-bold py-3 rounded-xl cursor-not-allowed border border-dashed border-gray-600">
+                             🔒 Continut Blocat
+                        </div>
+                        {% else %}
+                        <a href="{{ ad.link }}" target="_blank" 
+                           class="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-3 rounded-xl transition-colors">
+                            Vezi anuntul original
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-full text-center py-20 opacity-30">
+                    <div class="text-6xl mb-4">🔍</div>
+                    <p class="text-xl font-medium">Introdu criteriile mai sus pentru a incepe cautarea.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
 
     <div class="p-6 bg-gray-800/20 border-t border-gray-800 mt-auto">
@@ -123,18 +174,15 @@
             let form = document.createElement('form');
             form.method = 'POST';
             form.action = '/login';
-            
             let input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'password';
             input.value = pw;
-            
             form.appendChild(input);
             document.body.appendChild(form);
             form.submit();
         }
     }
     </script>
-
 </body>
 </html>

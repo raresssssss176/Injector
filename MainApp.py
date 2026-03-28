@@ -27,6 +27,18 @@ def get_coords(city_name):
         return None, None
     return None, None
 
+def cleanup_old_ads():
+    """Deletes ads that haven't been seen in the last 24 hours."""
+    with sqlite3.connect('market.db') as conn:
+        cursor = conn.cursor()
+        # Delete records where last_seen is older than 1 day
+        cursor.execute("""
+            DELETE FROM ads 
+            WHERE last_seen < datetime('now', '-1 day')
+        """)
+        conn.commit()
+        print(f"cleaned up {cursor.rowcount} expired ads.")
+
 def save_to_db(ad_id, title, price_str, url, summary, city):
     # 1. Price Cleaning
     clean_price = ''.join(filter(str.isdigit, price_str)) 
@@ -193,3 +205,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+    cleanup_old_ads()
