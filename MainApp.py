@@ -125,7 +125,7 @@ def run():
         'query': GRAPHQL_QUERY,
         'variables': {
             'searchParameters': [
-                {'key': 'offset', 'value': '0'},
+                {'key': 'offset', 'value': '39'},
                 {'key': 'limit', 'value': '39'}, 
                 {'key': 'category_id', 'value': '84'},
             ]

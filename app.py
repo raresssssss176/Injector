@@ -34,6 +34,37 @@ def haversine(lat1, lon1, lat2, lon2):
 
 # --- ROUTES ---
 
+@app.route('/admin/reviews')
+def admin_reviews():
+    # Verificăm dacă ești logat ca admin (folosind sesiunea de la sandwich-uri)
+    if not session.get('is_sandwich_pro'):
+        return redirect(url_for('home'))
+
+    conn = sqlite3.connect('market.db')
+    conn.row_factory = sqlite3.Row
+    # Luăm toate recenziile care așteaptă aprobarea
+    pending = conn.execute("SELECT * FROM reviews WHERE status = 'pending'").fetchall()
+    # Luăm și ultimele 10 recenzii deja aprobate (în caz că vrei să ștergi una)
+    approved = conn.execute("SELECT * FROM reviews WHERE status = 'approved' ORDER BY id DESC LIMIT 10").fetchall()
+    conn.close()
+    
+    return render_template('admin_reviews.html', pending=pending, approved=approved)
+
+@app.route('/admin/reviews/<action>/<int:review_id>')
+def review_action(action, review_id):
+    if not session.get('is_sandwich_pro'):
+        return "Unauthorized", 403
+
+    conn = sqlite3.connect('market.db')
+    if action == 'approve':
+        conn.execute("UPDATE reviews SET status = 'approved' WHERE id = ?", (review_id,))
+    elif action == 'delete':
+        conn.execute("DELETE FROM reviews WHERE id = ?", (review_id,))
+    
+    conn.commit()
+    conn.close()
+    return redirect(url_for('admin_reviews'))
+
 @app.route('/')
 def home():
     return render_template('index.html', ads=[], is_teaser=False)
@@ -191,19 +222,33 @@ def success():
     except Exception as e: print(f"Db Error: {e}")
 
     # 4. Email Results via Resend
+    # 4. Email Results via Resend
     if all_ads and user_email:
         try:
+            # Generăm link-ul de recenzie folosind email-ul clientului
+            # _external=True este CRITIC pentru a genera un link complet (http://...)
+            review_link = url_for('leave_review', email=user_email, _external=True)
+
             ad_text = "\n".join([f"- {a['name']}: {a['price']}€ ({a['km_away']}km) {a['link']}" for a in all_ads[:10]])
+            
+            # Mesajul HTML arată mult mai profi decât cel text
             resend.Emails.send({
                 "from": "CarHunter <alerts@carhunterengine.com>",
                 "to": [user_email],
-                "subject": f"Unlocked: {len(all_ads)} cars for {query}",
-                "text": f"Success! Here are your matches:\n\n{ad_text}"
+                "subject": f"Deblocat: {len(all_ads)} mașini pentru {query}",
+                "html": f"""
+                    <h3>Succes! Iată rezultatele tale pentru {query}:</h3>
+                    <pre>{ad_text}</pre>
+                    <br><hr><br>
+                    <p>Ți-a fost de folos căutarea?</p>
+                    <a href="{review_link}" 
+                       style="background-color: #3b82f6; color: white; padding: 12px 20px; text-decoration: none; border-radius: 10px; font-weight: bold; display: inline-block;">
+                       Lasă o recenzie aici
+                    </a>
+                """
             })
-        except: pass
-
-    return render_template('index.html', ads=all_ads, is_teaser=False)
-
+        except Exception as e:
+            print(f"Eroare Resend: {e}")
 # --- ADMIN / SANDWICH SHOP ---
 
 @app.route('/login', methods=['POST'])
