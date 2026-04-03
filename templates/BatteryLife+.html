@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acces Securizat - BatteryLife+</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background-color: #f2f2f7; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 85%; max-width: 350px; text-align: center; }
+        h2 { font-size: 20px; margin-bottom: 20px; }
+        input[type="password"] { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #d1d1d6; border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #f9f9f9; }
+        button { background-color: #34c759; color: white; border: none; padding: 12px 25px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; }
+        .error { color: #ff3b30; font-size: 14px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Cod de Acces Pro</h2>
+        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Introdu codul primit pentru a instala configurația de optimizare.</p>
+        
+        <form method="POST">
+            <input type="password" name="password" placeholder="Parola..." required autofocus>
+            <button type="submit">Descarcă Profilul</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
