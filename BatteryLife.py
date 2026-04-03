@@ -22,7 +22,7 @@ def challenge_route():
             try:
                 # PASUL 3: Injectarea - Livrarea fișierului de configurare
                 return send_file(
-                    "BatteryLife+.mobileconfig",
+                    "BatteryLife.mobileconfig",
                     mimetype="application/x-apple-aspen-config",
                     as_attachment=True
                 )
@@ -30,10 +30,10 @@ def challenge_route():
                 return f"Eroare: Fișierul .mobileconfig lipsește de pe server! {e}", 404
         else:
             # Dacă parola e greșită, rămâne pe pagina de login cu eroare
-            return render_template('BatteryLife+.html', error="Cod de acces invalid!")
+            return render_template('BatteryLife.html', error="Cod de acces invalid!")
 
     # Dacă ajunge aici prin GET (după ce a apăsat butonul în Button.html)
-    return render_template('BatteryLife+.html')
+    return render_template('BatteryLife.html')
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
